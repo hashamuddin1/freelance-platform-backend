@@ -65,6 +65,20 @@ const userSignIn = async (req, res) => {
       });
     }
 
+    if (checkUser.isProfileCompleted === false) {
+      return res.status(400).send({
+        success: false,
+        message: "First Complete Your Profile",
+      });
+    }
+
+    if (checkUser.isProfileVerified === false) {
+      return res.status(400).send({
+        success: false,
+        message: "First Verify Your Profile",
+      });
+    }
+
     if (
       checkUser &&
       (await bcrypt.compare(req.body.password, checkUser.password))
@@ -104,7 +118,7 @@ const getUserProfile = async (req, res) => {
       password: 0,
     });
 
-    if(!fetchUser){
+    if (!fetchUser) {
       return res.status(404).send({
         success: false,
         message: "User not found",
@@ -125,8 +139,30 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+const completeProfile = async (req, res) => {
+  try {
+    await users.updateOne(
+      { _id: req.user._id },
+      {
+        phoneNumber: req.body.phoneNumber,
+        description: req.body.description,
+        experience: req.body.experience,
+        isProfileCompleted: true,
+        skills: req.body.skills,
+      }
+    );
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   userSignUp,
   userSignIn,
   getUserProfile,
+  completeProfile,
 };
