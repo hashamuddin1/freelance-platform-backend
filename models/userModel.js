@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  roleId: {
+  role: {
     type: String,
     required: true,
     enum: ["agent", "client", "admin"],

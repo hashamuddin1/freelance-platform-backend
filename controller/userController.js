@@ -5,58 +5,11 @@ const bcrypt = require("bcryptjs");
 
 const userSignUp = async (req, res) => {
   try {
-    if (!req.body.emailAddress) {
-      return res.status(400).send({
-        success: false,
-        message: "The Email Address Is Required",
-      });
-    }
-
-    if (!req.body.phoneNumber) {
-      return res.status(400).send({
-        success: false,
-        message: "The Phone Number Is Required",
-      });
-    }
-
-    if (!req.body.fullName) {
-      return res.status(400).send({
-        success: false,
-        message: "The First Name Is Required",
-      });
-    }
-
-    if (!req.body.password) {
-      return res.status(400).send({
-        success: false,
-        message: "The Password Is Required",
-      });
-    }
-
-    if (!req.body.country) {
-      return res.status(400).send({
-        success: false,
-        message: "The Country Is Required",
-      });
-    }
-
-    if (!req.body.state) {
-      return res.status(400).send({
-        success: false,
-        message: "The State Is Required",
-      });
-    }
-
-    if (!req.body.city) {
-      return res.status(400).send({
-        success: false,
-        message: "The City Is Required",
-      });
-    }
-
-    const checkEmail = await users.findOne({
-      emailAddress: req.body.emailAddress,
-    });
+    const checkEmail = await users
+      .findOne({
+        emailAddress: req.body.emailAddress,
+      })
+      .select({ _id: 1 });
     if (checkEmail) {
       return res.status(400).send({
         success: false,
@@ -64,28 +17,11 @@ const userSignUp = async (req, res) => {
       });
     }
 
-    const checkPhone = await users.findOne({
-      phoneNumber: req.body.phoneNumber,
-    });
-    if (checkPhone) {
-      return res.status(400).send({
-        success: false,
-        message: "This Phone Number is already Exist",
-      });
-    }
-
-    const fetchRole = await roles.findOne({ roleName: "User" });
-
     const user = new users({
       emailAddress: req.body.emailAddress,
-      phoneNumber: req.body.phoneNumber,
       fullName: req.body.fullName,
       password: req.body.password,
-      country: req.body.country,
-      state: req.body.state,
-      city: req.body.city,
-      roleId: fetchRole._id,
-      lastUpdateLocation: new Date(),
+      role: req.body.role,
     });
     let saltPassword = await bcrypt.genSalt(10);
     let encryptedPassword = await bcrypt.hash(user.password, saltPassword);
@@ -116,6 +52,81 @@ const userSignUp = async (req, res) => {
   }
 };
 
+const userSignIn = async (req, res) => {
+  try {
+    const checkUser = await users.findOne({
+      emailAddress: req.body.emailAddress,
+    });
+
+    if (!checkUser) {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid Email",
+      });
+    }
+
+    if (
+      checkUser &&
+      (await bcrypt.compare(req.body.password, checkUser.password))
+    ) {
+      const token = jwt.sign(
+        { _id: checkUser._id, emailAddress: checkUser.emailAddress },
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "30d",
+        }
+      );
+
+      return res.status(200).send({
+        success: true,
+        message: "User Login Successfully",
+        data: checkUser,
+        token,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+const getUserProfile = async (req, res) => {
+  try {
+    const fetchUser = await users.findOne({ _id: req.user._id }).select({
+      password: 0,
+    });
+
+    if(!fetchUser){
+      return res.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "User Data has been Fetched Successfully",
+      data: fetchUser,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   userSignUp,
+  userSignIn,
+  getUserProfile,
 };
