@@ -2,6 +2,7 @@ const { users } = require("../models/userModel");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const { skilltests } = require("../models/skillTestModel");
 
 const userSignUp = async (req, res) => {
   try {
@@ -160,9 +161,27 @@ const completeProfile = async (req, res) => {
   }
 };
 
+const getQuizQuestion = async (req, res) => {
+  try {
+    const fetchQuestion=await skilltests.find()
+    return res.status(200).send({
+      success: true,
+      message: "Quiz Questions has been Fetched Successfully",
+      data: fetchQuestion,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   userSignUp,
   userSignIn,
   getUserProfile,
   completeProfile,
+  getQuizQuestion,
 };
