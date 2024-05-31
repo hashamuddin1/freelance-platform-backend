@@ -163,7 +163,7 @@ const completeProfile = async (req, res) => {
 
 const getQuizQuestion = async (req, res) => {
   try {
-    const fetchQuestion=await skilltests.find()
+    const fetchQuestion=await skilltests.aggregate([{ $sample: { size: 2 } }]);
     return res.status(200).send({
       success: true,
       message: "Quiz Questions has been Fetched Successfully",
