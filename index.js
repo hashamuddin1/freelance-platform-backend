@@ -11,9 +11,9 @@ const clientRouter = require("./routes/clientRoutes");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use([adminRouter, userRouter, clientRouter]);
-
 app.use(cors());
+
+app.use([adminRouter, userRouter, clientRouter]);
 
 app.listen(port, () => {
   console.log(
