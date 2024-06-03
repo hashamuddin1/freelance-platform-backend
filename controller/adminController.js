@@ -1,4 +1,5 @@
 const { skilltests } = require("../models/skillTestModel");
+const { users } = require("../models/userModel");
 require("dotenv").config();
 
 const addSkillQuestion = async (req, res) => {
@@ -44,7 +45,25 @@ const getAllQuestion = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const fetchAllUsers = await users.find()
+    return res.status(200).send({
+      success: true,
+      message: "Fetch All Users Successfully",
+      data: fetchAllUsers,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}
+
 module.exports = {
   addSkillQuestion,
   getAllQuestion,
+  getAllUsers
 };

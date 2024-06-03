@@ -150,8 +150,13 @@ const completeProfile = async (req, res) => {
         experience: req.body.experience,
         isProfileCompleted: true,
         skills: req.body.skills,
+        price: req.body.price,
       }
     );
+    return res.status(200).send({
+      success: true,
+      message: "Profile Completed Successfully",
+    });
   } catch (e) {
     console.log(e);
     return res.status(400).send({

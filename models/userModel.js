@@ -32,6 +32,11 @@ const userSchema = new mongoose.Schema({
       required: false,
     },
   ],
+  price: {
+    type: Number,
+    required: false,
+    default: null,
+  },
   description: {
     type: String,
     required: false,

@@ -6,11 +6,12 @@ const port = process.env.PORT;
 require("./config/database");
 const adminRouter = require("./routes/adminRoutes");
 const userRouter = require("./routes/userRoutes");
+const clientRouter = require("./routes/clientRoutes");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use([adminRouter, userRouter]);
+app.use([adminRouter, userRouter, clientRouter]);
 
 app.use(cors());
 
