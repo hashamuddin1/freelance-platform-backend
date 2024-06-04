@@ -57,6 +57,7 @@ const userSignIn = async (req, res) => {
   try {
     const checkUser = await users.findOne({
       emailAddress: req.body.emailAddress,
+      role: req.body.role
     });
 
     if (!checkUser) {
@@ -73,7 +74,7 @@ const userSignIn = async (req, res) => {
       });
     }
 
-    if (checkUser.isProfileVerified === false) {
+    if (checkUser.role === "agent" && checkUser.isProfileVerified === false) {
       return res.status(400).send({
         success: false,
         message: "First Verify Your Profile",
@@ -168,7 +169,7 @@ const completeProfile = async (req, res) => {
 
 const getQuizQuestion = async (req, res) => {
   try {
-    const fetchQuestion=await skilltests.aggregate([{ $sample: { size: 2 } }]);
+    const fetchQuestion = await skilltests.aggregate([{ $sample: { size: 2 } }]);
     return res.status(200).send({
       success: true,
       message: "Quiz Questions has been Fetched Successfully",
