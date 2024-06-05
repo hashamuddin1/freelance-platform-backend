@@ -67,17 +67,27 @@ const userSignIn = async (req, res) => {
       });
     }
 
+    const token = jwt.sign(
+      { _id: checkUser._id, emailAddress: checkUser.emailAddress },
+      process.env.TOKEN_KEY,
+      {
+        expiresIn: "30d",
+      }
+    );
+
     if (checkUser.isProfileCompleted === false) {
-      return res.status(400).send({
-        success: false,
+      return res.status(200).send({
+        success: true,
         message: "First Complete Your Profile",
+        token,
       });
     }
 
     if (checkUser.role === "agent" && checkUser.isProfileVerified === false) {
-      return res.status(400).send({
-        success: false,
+      return res.status(200).send({
+        success: true,
         message: "First Verify Your Profile",
+        token,
       });
     }
 
