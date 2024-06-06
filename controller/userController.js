@@ -194,10 +194,49 @@ const getQuizQuestion = async (req, res) => {
   }
 };
 
+const submitQuiz = async (req, res) => {
+  try { 
+    let correctQuestions=0;
+
+    for(let i=0;i<req.body.arr.length;i++){
+      if(req.body.arr[i].selectValue===req.body.arr[i].rightAnswer){
+        correctQuestions++
+      }
+    }
+
+    const percentage = (correctQuestions / req.body.arr.length) * 100;
+
+    if (percentage >= 50) {
+      await users.updateOne(
+        { _id: req.user._id },
+        {
+          isProfileVerified: true,
+        }
+      );
+      return res.status(200).send({
+        success: true,
+        message: "You pass this exam",
+      });
+    } else {
+      return res.status(200).send({
+        success: true,
+        message: "You failed this exam",
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}
+
 module.exports = {
   userSignUp,
   userSignIn,
   getUserProfile,
   completeProfile,
   getQuizQuestion,
+  submitQuiz
 };

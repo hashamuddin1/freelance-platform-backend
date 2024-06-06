@@ -1,5 +1,6 @@
 const { users } = require("../models/userModel");
 const { orders } = require("../models/orderModel");
+const { skilltests } = require("../models/skillTestModel");
 require("dotenv").config();
 
 const getAllAgents = async (req, res) => {
@@ -61,10 +62,9 @@ const assignOrder = async (req, res) => {
     }
 }
 
-const fetchAllOrdersByClient=async(req,res)=>{}
 
 module.exports = {
     getAllAgents,
     getSingleAgent,
-    assignOrder
+    assignOrder,
 };

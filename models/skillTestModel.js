@@ -20,7 +20,6 @@ const skilltestSchema = new mongoose.Schema({
   rightAnswer: {
     type: String,
     required: true,
-    enum: ["optionA", "optionB", "optionC"],
   },
 });
 
