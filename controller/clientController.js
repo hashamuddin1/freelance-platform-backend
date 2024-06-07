@@ -40,12 +40,13 @@ const getSingleAgent = async (req, res) => {
 const assignOrder = async (req, res) => {
     try {
         const insertOrder = new orders({
-            status: 'pending',
-            price: req.body.price,
-            agentId: req.body.agentId,
-            clientId: req.user._id
-
-        })
+          status: "pending",
+          price: req.body.price,
+          agentId: req.body.agentId,
+          clientId: req.user._id,
+          title: req.body.title,
+          description: req.body.description,
+        });
 
         await insertOrder.save()
         return res.status(200).send({
