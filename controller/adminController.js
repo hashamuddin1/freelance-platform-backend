@@ -48,7 +48,7 @@ const getAllQuestion = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const fetchAllUsers = await users.find();
+    const fetchAllUsers = await users.find({ role: { $ne: "admin" } });
     return res.status(200).send({
       success: true,
       message: "Fetch All Users Successfully",
@@ -77,9 +77,9 @@ const adminKPI = async (req, res) => {
       success: true,
       message: "Fetch KPI Successfully",
       data: {
-        fetchAllAgent,
-        fetchAllClient,
-        fetchAllOrder,
+        fetchAllAgent: fetchAllAgent.length,
+        fetchAllClient: fetchAllClient.length,
+        fetchAllOrder: fetchAllOrder.length,
       },
     });
   } catch (e) {
