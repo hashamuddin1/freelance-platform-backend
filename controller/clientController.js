@@ -1,6 +1,5 @@
 const { users } = require("../models/userModel");
 const { orders } = require("../models/orderModel");
-const { skilltests } = require("../models/skillTestModel");
 const { cards } = require("../models/cardModel");
 require("dotenv").config();
 
