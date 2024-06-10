@@ -116,6 +116,7 @@ const fetchOrderKPIbyClient = async (req, res) => {
       success: true,
       message: "Order has been fetched Successfully",
       data: {
+        totalOrder: fetchPendingOrders.length + fetchCompletedOrders.length,
         pendingOrder: fetchPendingOrders.length,
         completedOrder: fetchCompletedOrders.length,
       },
