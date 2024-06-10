@@ -7,13 +7,14 @@ require("./config/database");
 const adminRouter = require("./routes/adminRoutes");
 const userRouter = require("./routes/userRoutes");
 const clientRouter = require("./routes/clientRoutes");
+const agentRouter = require("./routes/agentRoutes");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
-app.use([adminRouter, userRouter, clientRouter]);
+app.use([adminRouter, userRouter, clientRouter, agentRouter]);
 
 app.listen(port, () => {
   console.log(
