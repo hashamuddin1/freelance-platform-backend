@@ -42,7 +42,35 @@ const insertBank = async (req, res) => {
   }
 };
 
+const fetchOrderKPIbyAgent = async (req, res) => {
+  try {
+    const fetchPendingOrders = await orders
+      .find({ agentId: req.user._id, status: "pending" })
+      .select({ _id: 1 });
+
+    const fetchCompletedOrders = await orders
+      .find({ agentId: req.user._id, status: "completed" })
+      .select({ _id: 1 });
+
+    return res.status(200).send({
+      success: true,
+      message: "Order has been fetched Successfully",
+      data: {
+        pendingOrder: fetchPendingOrders.length,
+        completedOrder: fetchCompletedOrders.length,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   fetchAllOrderByAgent,
   insertBank,
+  fetchOrderKPIbyAgent,
 };

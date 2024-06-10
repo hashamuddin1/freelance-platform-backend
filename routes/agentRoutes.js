@@ -4,6 +4,7 @@ const agentRouter = express.Router();
 const {
   fetchAllOrderByAgent,
   insertBank,
+  fetchOrderKPIbyAgent,
 } = require("../controller/agentController");
 const verifyToken = require("../middleware/auth");
 
@@ -13,5 +14,10 @@ agentRouter.get(
   fetchAllOrderByAgent
 );
 agentRouter.post("/api/insertBank", [verifyToken], insertBank);
+agentRouter.get(
+  "/api/fetchOrderKPIbyAgent",
+  [verifyToken],
+  fetchOrderKPIbyAgent
+);
 
 module.exports = agentRouter;
