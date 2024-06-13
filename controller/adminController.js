@@ -91,9 +91,27 @@ const adminKPI = async (req, res) => {
   }
 };
 
+const getAllOrder = async (req, res) => {
+  try {
+    const fetchAllOrders = await orders.find().populate({ path: "agentId", select: "fullName" }).populate({ path: "clientId", select: "fullName" });
+    return res.status(200).send({
+      success: true,
+      message: "Fetch All Orders Successfully",
+      data: fetchAllOrders,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
 module.exports = {
   addSkillQuestion,
   getAllQuestion,
   getAllUsers,
   adminKPI,
+  getAllOrder
 };

@@ -69,8 +69,50 @@ const fetchOrderKPIbyAgent = async (req, res) => {
   }
 };
 
+const totalEarningKPI = async (req, res) => {
+  try {
+    const fetchTotalEarning = await orders
+      .find({ agentId: req.user._id })
+      .select({ _id: 1, price: 1 });
+
+    let sum = 0
+    for (let i = 0; i < fetchTotalEarning.length; i++) {
+      sum += fetchTotalEarning[i].price
+
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Order has been fetched Successfully",
+      data: sum
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}
+
+const changeOrderStatus = async (req, res) => {
+  try {
+    await orders.updateOne({ _id: req.body.orderId }, { status: "completed" })
+    return res.status(200).send({
+      success: true,
+      message: "Order has been completed Successfully",
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+}
+
 module.exports = {
   fetchAllOrderByAgent,
   insertBank,
-  fetchOrderKPIbyAgent,
+  fetchOrderKPIbyAgent, totalEarningKPI, changeOrderStatus
 };
