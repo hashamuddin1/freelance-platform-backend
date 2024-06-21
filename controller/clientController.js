@@ -1,6 +1,7 @@
 const { users } = require("../models/userModel");
 const { orders } = require("../models/orderModel");
 const { cards } = require("../models/cardModel");
+const { ratings } = require("../models/ratingModel");
 require("dotenv").config();
 
 const getAllAgents = async (req, res) => {
@@ -130,6 +131,30 @@ const fetchOrderKPIbyClient = async (req, res) => {
   }
 };
 
+const giveRatings = async (req, res) => {
+    try {
+        const insertRating = new ratings({
+            agentId: req.body.agentId,
+            clientId: req.user._id,
+            rate: req.body.rate,
+            description: req.body.description,
+        });
+
+        await insertRating.save()
+        return res.status(200).send({
+            success: true,
+            message: "Review has been given Successfully",
+        });
+
+    } catch (e) {
+        console.log(e);
+        return res.status(400).send({
+            success: false,
+            message: "Something went wrong",
+        });
+    }
+}
+
 module.exports = {
   getAllAgents,
   getSingleAgent,
@@ -137,4 +162,5 @@ module.exports = {
   fetchAllOrderByClient,
   insertCard,
   fetchOrderKPIbyClient,
+  giveRatings
 };

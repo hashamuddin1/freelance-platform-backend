@@ -8,6 +8,7 @@ const {
   fetchAllOrderByClient,
   insertCard,
   fetchOrderKPIbyClient,
+  giveRatings
 } = require("../controller/clientController");
 const verifyToken = require("../middleware/auth");
 
@@ -21,5 +22,6 @@ clientRouter.get(
   [verifyToken],
   fetchOrderKPIbyClient
 );
+clientRouter.post("/api/giveRatings", [verifyToken], giveRatings);
 
 module.exports = clientRouter;
