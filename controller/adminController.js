@@ -1,7 +1,48 @@
 const { skilltests } = require("../models/skillTestModel");
 const { users } = require("../models/userModel");
 const { orders } = require("../models/orderModel");
+const { contacts } = require("../models/contactModel");
 require("dotenv").config();
+
+const addContactForm = async (req, res) => {
+  try {
+    const insertContact = new contacts({
+      description: req.body.description,
+      title: req.body.title,
+      userId: req.user._id,
+    });
+
+    await insertContact.save();
+
+    return res.status(200).send({
+      success: true,
+      message: "Contact Added Successfully",
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
+
+const getAllContact = async (req, res) => {
+  try {
+    const fetchAllContact = await contacts.find().populate({ path: "userId", select: "fullName emailAddress" })
+    return res.status(200).send({
+      success: true,
+      message: "Fetch All Contact Successfully",
+      data: fetchAllContact,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 
 const addSkillQuestion = async (req, res) => {
   try {
@@ -113,5 +154,6 @@ module.exports = {
   getAllQuestion,
   getAllUsers,
   adminKPI,
-  getAllOrder
+  getAllOrder,
+  addContactForm, getAllContact
 };
