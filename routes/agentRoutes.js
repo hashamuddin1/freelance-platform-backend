@@ -6,7 +6,8 @@ const {
   insertBank,
   fetchOrderKPIbyAgent,
   totalEarningKPI,
-  changeOrderStatus
+  changeOrderStatus,
+  fetchAllReviewsByAgent,
 } = require("../controller/agentController");
 const verifyToken = require("../middleware/auth");
 
@@ -30,6 +31,11 @@ agentRouter.put(
   "/api/changeOrderStatus",
   [verifyToken],
   changeOrderStatus
+);
+agentRouter.get(
+  "/api/fetchAllReviewsByAgent",
+  [verifyToken],
+  fetchAllReviewsByAgent
 );
 
 module.exports = agentRouter;

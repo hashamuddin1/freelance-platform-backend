@@ -1,5 +1,6 @@
 const { orders } = require("../models/orderModel");
 const { banks } = require("../models/bankModel");
+const { ratings } = require("../models/ratingModel");
 
 const fetchAllOrderByAgent = async (req, res) => {
   try {
@@ -75,16 +76,15 @@ const totalEarningKPI = async (req, res) => {
       .find({ agentId: req.user._id })
       .select({ _id: 1, price: 1 });
 
-    let sum = 0
+    let sum = 0;
     for (let i = 0; i < fetchTotalEarning.length; i++) {
-      sum += fetchTotalEarning[i].price
-
+      sum += fetchTotalEarning[i].price;
     }
 
     return res.status(200).send({
       success: true,
       message: "Order has been fetched Successfully",
-      data: sum
+      data: sum,
     });
   } catch (e) {
     console.log(e);
@@ -93,11 +93,11 @@ const totalEarningKPI = async (req, res) => {
       message: "Something went wrong",
     });
   }
-}
+};
 
 const changeOrderStatus = async (req, res) => {
   try {
-    await orders.updateOne({ _id: req.body.orderId }, { status: "completed" })
+    await orders.updateOne({ _id: req.body.orderId }, { status: "completed" });
     return res.status(200).send({
       success: true,
       message: "Order has been completed Successfully",
@@ -109,10 +109,33 @@ const changeOrderStatus = async (req, res) => {
       message: "Something went wrong",
     });
   }
-}
+};
+
+const fetchAllReviewsByAgent = async (req, res) => {
+  try {
+    const fetchReviews = await ratings
+      .find({ agentId: req.user._id })
+      .populate({ path: "clientId", select: "fullName" });
+
+    return res.status(200).send({
+      success: true,
+      message: "Reviews has been fetched Successfully",
+      data: fetchReviews,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).send({
+      success: false,
+      message: "Something went wrong",
+    });
+  }
+};
 
 module.exports = {
   fetchAllOrderByAgent,
   insertBank,
-  fetchOrderKPIbyAgent, totalEarningKPI, changeOrderStatus
+  fetchOrderKPIbyAgent,
+  totalEarningKPI,
+  changeOrderStatus,
+  fetchAllReviewsByAgent,
 };
