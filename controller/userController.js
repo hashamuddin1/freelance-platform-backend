@@ -179,7 +179,7 @@ const completeProfile = async (req, res) => {
 
 const getQuizQuestion = async (req, res) => {
   try {
-    const fetchQuestion = await skilltests.aggregate([{ $sample: { size: 2 } }]);
+    const fetchQuestion = await skilltests.aggregate([{ $sample: { size: 10 } }]);
     return res.status(200).send({
       success: true,
       message: "Quiz Questions has been Fetched Successfully",
@@ -206,7 +206,7 @@ const submitQuiz = async (req, res) => {
 
     const percentage = (correctQuestions / req.body.arr.length) * 100;
 
-    if (percentage >= 50) {
+    if (percentage >= 80) {
       await users.updateOne(
         { _id: req.user._id },
         {

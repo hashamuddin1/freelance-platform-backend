@@ -12,7 +12,7 @@ const {
 } = require("../controller/clientController");
 const verifyToken = require("../middleware/auth");
 
-clientRouter.get("/api/getAllAgents", [verifyToken], getAllAgents);
+clientRouter.get("/api/getAllAgents", getAllAgents);
 clientRouter.get("/api/getSingleAgent", [verifyToken], getSingleAgent);
 clientRouter.post("/api/assignOrder", [verifyToken], assignOrder);
 clientRouter.get("/api/fetchAllOrderByClient", [verifyToken], fetchAllOrderByClient);
