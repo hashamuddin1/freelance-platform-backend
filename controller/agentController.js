@@ -97,7 +97,18 @@ const totalEarningKPI = async (req, res) => {
 
 const changeOrderStatus = async (req, res) => {
   try {
-    await orders.updateOne({ _id: req.body.orderId }, { status: "completed" });
+    const fetchOrderStatus = await orders
+      .findOne({ _id: req.body.orderId })
+      .select({ status: 1 });
+    if (fetchOrderStatus.status == "queue") {
+      await orders.updateOne({ _id: req.body.orderId }, { status: "pending" });
+    } else {
+      await orders.updateOne(
+        { _id: req.body.orderId },
+        { status: "completed" }
+      );
+    }
+
     return res.status(200).send({
       success: true,
       message: "Order has been completed Successfully",
