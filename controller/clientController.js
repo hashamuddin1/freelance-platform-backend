@@ -16,7 +16,7 @@ const getAllAgents = async (req, res) => {
     } else {
       const fetchAllUsers = await users.find({
         role: "agent",
-        skills: { $in: [req.query.skill] },
+        skills: { $in: req.query.skill },
       });
       return res.status(200).send({
         success: true,
@@ -53,7 +53,7 @@ const getSingleAgent = async (req, res) => {
 const assignOrder = async (req, res) => {
   try {
     const insertOrder = new orders({
-      status: "pending",
+      status: "queue",
       price: req.body.price,
       agentId: req.body.agentId,
       clientId: req.user._id,

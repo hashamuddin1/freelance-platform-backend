@@ -4,7 +4,7 @@ const orderSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ["pending", "completed"],
+    enum: ["pending", "completed", "queue"],
   },
   price: {
     type: Number,

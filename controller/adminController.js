@@ -29,7 +29,7 @@ const addContactForm = async (req, res) => {
 
 const getAllContact = async (req, res) => {
   try {
-    const fetchAllContact = await contacts.find().populate({ path: "userId", select: "fullName emailAddress" })
+    const fetchAllContact = await contacts.find().populate({ path: "userId", select: "fullName emailAddress" }).sort({createdAt:-1})
     return res.status(200).send({
       success: true,
       message: "Fetch All Contact Successfully",
@@ -71,7 +71,7 @@ const addSkillQuestion = async (req, res) => {
 
 const getAllQuestion = async (req, res) => {
   try {
-    const fetchAllQuestion = await skilltests.find();
+    const fetchAllQuestion = await skilltests.find().sort({createdAt:-1});
 
     return res.status(200).send({
       success: true,
@@ -89,7 +89,7 @@ const getAllQuestion = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const fetchAllUsers = await users.find({ role: { $ne: "admin" } });
+    const fetchAllUsers = await users.find({ role: { $ne: "admin" } }).sort({createdAt:-1});
     return res.status(200).send({
       success: true,
       message: "Fetch All Users Successfully",
@@ -113,6 +113,9 @@ const adminKPI = async (req, res) => {
       .find({ role: "client" })
       .select({ _id: 1 });
     const fetchAllOrder = await orders.find().select({ _id: 1 });
+    const fetchAllCompletedOrder = await orders.find({status:"completed"}).select({ _id: 1 });
+    const fetchAllPendingOrder = await orders.find({status:"pending"}).select({ _id: 1 });
+    const fetchAllIssue = await contacts.find().select({ _id: 1 });
 
     return res.status(200).send({
       success: true,
@@ -121,6 +124,9 @@ const adminKPI = async (req, res) => {
         fetchAllAgent: fetchAllAgent.length,
         fetchAllClient: fetchAllClient.length,
         fetchAllOrder: fetchAllOrder.length,
+        fetchAllCompletedOrder:fetchAllCompletedOrder.length,
+        fetchAllPendingOrder:fetchAllPendingOrder.length,
+        fetchAllIssue:fetchAllIssue.length
       },
     });
   } catch (e) {
@@ -134,7 +140,7 @@ const adminKPI = async (req, res) => {
 
 const getAllOrder = async (req, res) => {
   try {
-    const fetchAllOrders = await orders.find().populate({ path: "agentId", select: "fullName" }).populate({ path: "clientId", select: "fullName" });
+    const fetchAllOrders = await orders.find().populate({ path: "agentId", select: "fullName" }).populate({ path: "clientId", select: "fullName" }).sort({createdAt:-1});
     return res.status(200).send({
       success: true,
       message: "Fetch All Orders Successfully",
