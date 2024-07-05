@@ -7,7 +7,10 @@ require("dotenv").config();
 const getAllAgents = async (req, res) => {
   try {
     if (!req.query.skill) {
-      const fetchAllUsers = await users.find({ role: "agent" });
+      const fetchAllUsers = await users.find({
+        role: "agent",
+        isProfileVerified: true,
+      });
       return res.status(200).send({
         success: true,
         message: "Fetch All Agents Successfully",
@@ -16,6 +19,7 @@ const getAllAgents = async (req, res) => {
     } else {
       const fetchAllUsers = await users.find({
         role: "agent",
+        isProfileVerified: true,
         skills: { $in: req.query.skill },
       });
       return res.status(200).send({
